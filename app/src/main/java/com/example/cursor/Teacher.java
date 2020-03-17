@@ -12,11 +12,11 @@ class Teacher {
     String subject;
     Teacher(){
         id = -1;
-        name = "��������";
-        surname = "���������";
-        patronomic = "���������";
-        school = "�������� �0";
-        subject = "�������";
+        name = "1";
+        surname = "2";
+        patronomic = "3";
+        school = "4";
+        subject = "5";
         form_masters_class = new Class();
     }
     String getfullname(){
@@ -48,7 +48,7 @@ class Lesson{
     long start, end;
     Lesson(){
         id = -1;
-        name = "�������";
+        name = "6";
         numberinday = -1;
         start = (new Date()).getTime();
         end = start + 1000000;
@@ -65,11 +65,11 @@ class User{
     Teacher form_master;
 
     User(){
-        name = "�������";
-        surname = "����������";
-        patronomic = "�����������";
+        name = "7";
+        surname = "8";
+        patronomic = "9";
         userclass = new Class();
-        school = "�������� �0";
+        school = "10";
         form_master = new Teacher();
     }
     String getfullname(){

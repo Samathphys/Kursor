@@ -9,7 +9,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.ListFragment;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -23,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Teacher> teachers = new ArrayList<>();
     User user = new User();
 
-    ListFragment listFragment = new ListFragment();
+    ListFragment listFragment;
     UserFragment userFragment = new UserFragment();
     ScheduleFragment scheduleFragment = new ScheduleFragment();
 
@@ -32,9 +31,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         mDrawer = findViewById(R.id.drawer_layout);
         nvDrawer = findViewById(R.id.nvView);
-        setSupportActionBar(toolbar);
         toggle = new ActionBarDrawerToggle (this, mDrawer, toolbar, R.string.open, R.string.close);
         mDrawer.setDrawerListener(toggle);
         setupDrawerContent(nvDrawer);
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             }
             teachers.add(teacher);
         }
-        listFragment.teachers = teachers;
+        listFragment = new ListFragment(teachers);
         userFragment.user = user;
         loadFragment(listFragment);
     }

@@ -39,7 +39,8 @@ public class TeacherFragment extends Fragment {
     ArrayList<PageFragment> pageFragments;
     LinearLayout layoutmain;
 
-    public TeacherFragment() {
+    public TeacherFragment(Teacher teacher) {
+        this.teacher = teacher;
         pageFragments = new ArrayList<>();
         for (int i = 0; i < pageCount; i++) {
             PageFragment pageFragment = new PageFragment();
@@ -65,8 +66,6 @@ public class TeacherFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_teacher, container, false);
-        if(teacher == null)
-            teacher = new Teacher();
         name = v.findViewById(R.id.name);
         classt = v.findViewById(R.id.classt);
         school = v.findViewById(R.id.school);
@@ -85,6 +84,7 @@ public class TeacherFragment extends Fragment {
         pagerAdapter = new MyFragmentPagerAdapter(getFragmentManager());
         pager.setAdapter(pagerAdapter);
         pager.setCurrentItem(pagenow);
+        pager.setVisibility(View.VISIBLE);
         dye(tv, pagenow);
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 

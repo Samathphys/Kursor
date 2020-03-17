@@ -32,6 +32,7 @@ class TAdapter extends ArrayAdapter<String> implements Filterable {
         inflater = context.getLayoutInflater();
         getFilter();
     }
+
     @Override
     public Filter getFilter() {
         if (filter == null){
@@ -101,7 +102,6 @@ class TAdapter extends ArrayAdapter<String> implements Filterable {
             return result;
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
 

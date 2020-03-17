@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/profile"
+            android:icon="@drawable/account"
+            android:title="Профиль" />
+        <item
+            android:id="@+id/teacher_list"
+            android:icon="@drawable/group"
+            android:checked="true"
+            android:title="Учителя" />
+        <item
+            android:id="@+id/schedule"
+            android:icon="@drawable/note"
+            android:title="Расписание"/>
+    </group>
+</menu>
