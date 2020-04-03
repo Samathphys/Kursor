@@ -12,6 +12,14 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,18 +46,33 @@ public class MainActivity extends AppCompatActivity {
         mDrawer.setDrawerListener(toggle);
         setupDrawerContent(nvDrawer);
         toggle.syncState();
-        Teacher teacher;
-        for (int i = 0; i < 30; i++) {
-            teacher = new Teacher();
-            if(i == 20) {
-                teacher.name = "Вера";
-                teacher.subject = "Физика";
+        final JSONArray[] jsonArrays = {null};
+        new Thread(() -> {
+            try {
+                jsonArrays[0] = download_arr("http://cursor.spb.ru/all_teachers");
+                try {
+
+                    System.out.println(jsonArrays[0].toString());
+                    for (int i = 0; i < jsonArrays[0].length(); i++) {
+                        Teacher teacher = new Teacher();
+                        JSONArray jsonArray1 = jsonArrays[0].getJSONArray(i);
+                        teacher.id = Integer.parseInt(jsonArray1.getString(0));
+                        teacher.name = jsonArray1.getString(1);
+                        if(jsonArray1.length() > 2)
+                            teacher.subject = jsonArray1.getString(2);
+                        teachers.add(teacher);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                listFragment = new ListFragment(teachers);
+                userFragment.user = user;
+                loadFragment(listFragment);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            teachers.add(teacher);
-        }
-        listFragment = new ListFragment(teachers);
-        userFragment.user = user;
-        loadFragment(listFragment);
+        }).start();
+
     }
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
@@ -59,6 +82,49 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    static  JSONArray download_arr(String url){
+        try {
+            String str = connect(url);
+            JSONArray jsonArray = new JSONArray(str);
+            return jsonArray;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new JSONArray();
+    }
+
+    static  JSONObject download_obj(String url){
+        try {
+            String str = connect(url);
+            JSONObject jsonObject = new JSONObject(str);
+            return jsonObject;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new JSONObject();
+    }
+
+    static  String connect(String url){
+        String str = "";
+        try {
+            URL obj = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            str = response.toString();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return str;
+    }
     public void selectDrawerItem(MenuItem menuItem) {
         switch(menuItem.getItemId()) {
             case R.id.profile:

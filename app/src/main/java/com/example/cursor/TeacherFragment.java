@@ -30,7 +30,7 @@ public class TeacherFragment extends Fragment {
     View v;
     TextView name, classt, school, status;
     Teacher teacher;
-    final int pageCount = 6;
+    final int pageCount = 5;
     int pagenow;
     TextView[]tv = new TextView[pageCount];
     String[] days1 = {"пн", "вт", "ср", "чт", "пт", "сб", "вс"};
@@ -39,7 +39,7 @@ public class TeacherFragment extends Fragment {
     ArrayList<PageFragment> pageFragments;
     LinearLayout layoutmain;
 
-    public TeacherFragment(Teacher teacher) {
+    TeacherFragment(Teacher teacher) {
         this.teacher = teacher;
         pageFragments = new ArrayList<>();
         for (int i = 0; i < pageCount; i++) {
@@ -77,7 +77,6 @@ public class TeacherFragment extends Fragment {
             layoutmain.removeView(status);
         });
         setTextSett(name, teacher.getfullname(), (int) 20);
-        setTextSett(classt, teacher.form_masters_class.name, 20);
         setTextSett(school, teacher.school, (int) 20);
         setTextSett(status, "Физичка", 20);
         pager =  v.findViewById(R.id.pager);
@@ -109,7 +108,7 @@ public class TeacherFragment extends Fragment {
         v.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         v.setPadding(50, 50, 50, 0);
-        v.setTextSize(fontsize);
+        v.setTextSize(20);
         v.setGravity(Gravity.CENTER);
     }
     void dye(TextView [] tv, int selected){

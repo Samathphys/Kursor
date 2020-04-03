@@ -1,5 +1,6 @@
 package com.example.cursor;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 class Teacher {
@@ -7,51 +8,39 @@ class Teacher {
     String name;
     String surname;
     String patronomic;
-    Class form_masters_class;
     String school;
     String subject;
     Teacher(){
         id = -1;
-        name = "1";
-        surname = "2";
-        patronomic = "3";
-        school = "4";
-        subject = "5";
-        form_masters_class = new Class();
+        name = "";
+        surname = "";
+        patronomic = "";
+        school = "";
+        subject = "";
     }
     String getfullname(){
         return name + " " + patronomic + " " + surname;
     }
 }
 
-class Subject{
-    int id;
-    String name;
-    Subject(){
-        id = -1;
-        name = "null";
-    }
-}
 
 class Class{
     int id;
     String name;
     Class(){
         id = -1;
-        name = "11-A";
+        name = "";
     }
 }
 class Lesson{
     int id;
     String name;
     int numberinday;
-    long start, end;
+    String start, end;
     Lesson(){
         id = -1;
-        name = "6";
+        name = "";
         numberinday = -1;
-        start = (new Date()).getTime();
-        end = start + 1000000;
     }
 }
 class User{
@@ -65,15 +54,23 @@ class User{
     Teacher form_master;
 
     User(){
-        name = "7";
-        surname = "8";
-        patronomic = "9";
+        name = "";
+        surname = "";
+        patronomic = "";
         userclass = new Class();
-        school = "10";
+        school = "";
         form_master = new Teacher();
     }
     String getfullname(){
         return name + " " + patronomic + " " + surname;
     }
 
+}
+
+class Day{
+    ArrayList<Lesson> lessons;
+
+    Day(){
+        lessons = new ArrayList<>();
+    }
 }

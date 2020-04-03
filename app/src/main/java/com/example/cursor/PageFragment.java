@@ -71,12 +71,8 @@ public class PageFragment extends Fragment {
             tv2.setPadding(10,10,10,10);
             tv3.setPadding(10,10,10,10);
             linearLayout.setPadding(10,10,10,10);
-            Date d = new Date();
-            d.setTime(lessons.get(i).start);
-            SimpleDateFormat form = new SimpleDateFormat("HH:mm");
-            tv11.setText(form.format(d));
-            d.setTime(lessons.get(i).end);
-            tv12.setText(form.format(d));
+            tv11.setText(lessons.get(i).start);
+            tv12.setText(lessons.get(i).end);
             tv2.setText("201");
             tv3.setText("там где надо");
             tv2.setMaxLines(1);
