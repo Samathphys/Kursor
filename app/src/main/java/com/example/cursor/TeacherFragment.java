@@ -9,10 +9,13 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.method.KeyListener;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class TeacherFragment extends Fragment {
+public class TeacherFragment extends Fragment implements KeyListener {
 
     View v;
     TextView name, classt, school, status;
@@ -44,17 +47,15 @@ public class TeacherFragment extends Fragment {
         pageFragments = new ArrayList<>();
         for (int i = 0; i < pageCount; i++) {
             PageFragment pageFragment = new PageFragment();
-            pageFragment.lessons = new ArrayList<>();
-            for (int j = 0; j < 8; j++) {
-                pageFragment.lessons.add(new Lesson());
-            }
+            pageFragment.lessons = teacher.week.get(i).lessons;
             pageFragments.add(pageFragment);
         }
         Date datenow = new Date();
         Calendar c = Calendar.getInstance();
         c.setTime(datenow);
         int date = c.get(Calendar.DAY_OF_WEEK)-2;
-        pagenow = (date == -1 ? 0 : date);
+        System.out.println(date);
+        pagenow = (date <= -1 || date == 5 ? 0 : date);
     }
 
     @Override
@@ -147,6 +148,34 @@ public class TeacherFragment extends Fragment {
         }
     }
 
+    @Override
+    public int getInputType() {
+        return 0;
+    }
+
+    @Override
+    public boolean onKeyDown(View view, Editable editable, int i, KeyEvent keyEvent) {
+        if (i == KeyEvent.KEYCODE_BACK) {
+            System.out.println("------------------------------------------------");
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onKeyUp(View view, Editable editable, int i, KeyEvent keyEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onKeyOther(View view, Editable editable, KeyEvent keyEvent) {
+        return false;
+    }
+
+    @Override
+    public void clearMetaKeyState(View view, Editable editable, int i) {
+
+    }
 
 
     class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
@@ -157,9 +186,7 @@ public class TeacherFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-            if(position == 0)
-                return pageFragments.get(pageFragments.size()-1);
-            return pageFragments.get(position - 1);
+            return pageFragments.get(position);
         }
 
         @Override

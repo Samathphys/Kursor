@@ -13,6 +13,7 @@ import android.widget.ListView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class ListFragment extends Fragment {
     ListView listView;
     ArrayList<String> listItems;
     ArrayList<String> listItems1;
+    String []week = {"monday","tuesday","wednesday", "thursday", "friday"};
 
     ListFragment(ArrayList<Teacher> teachers){
         strings = new ArrayList<>();
@@ -62,11 +64,47 @@ public class ListFragment extends Fragment {
         listView.setOnItemClickListener((parent, view, position, id) -> {
             try {
                 new Thread(() -> {
-                    JSONObject jsonObject = download_obj("http://cursor.spb.ru/schedule/" + teachers1.get(position).id);
-                    System.out.println(jsonObject.toString());
-                    TeacherFragment fragment = new TeacherFragment(teachers.get(position));
-                    FragmentManager fragmentManager = getFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.frame, fragment).commit();
+                    try {
+                        JSONArray jsonArray1 = download_arr("http://cursor.spb.ru/get_time").getJSONArray(0);
+                        String [][] time = new String[10][2];
+                        time[8][0] = "--";
+                        time[8][1] = "--";
+                        time[9][0] = "--";
+                        time[9][1] = "--";
+                        for (int i = 0; i < jsonArray1.length(); i++)
+                            if (i % 2 == 0){
+                                String s = jsonArray1.getString(i);
+                                System.out.println(s);
+                                int a = s.indexOf("(");
+                                int b = s.indexOf("-");
+                                int c = s.indexOf(")");
+                                time[i/2][0] = s.substring(a+1,b);
+                                time[i/2][1] = s.substring(b+1,c);
+                                System.out.println(time[i/2][0] + ":" + time[i/2][1]);
+                            }
+                        System.out.println(jsonArray1);
+                        JSONObject jsonObject = download_obj("http://cursor.spb.ru/schedule/" + teachers1.get(position).id);
+                        for (int i = 0; i < 5; i++) {
+                            Day day = new Day();
+                            JSONArray jsonArray = jsonObject.getJSONArray(week[i]);
+                            for (int j = 0; j < jsonArray.length(); j+=2) {
+                                Lesson lesson = new Lesson();
+                                lesson.classroom = jsonArray.getString(j);
+                                if(j+1 < jsonArray.length())
+                                    lesson.name = jsonArray.getString(j+1);
+                                lesson.start = time[j/2][0];
+                                lesson.end = time[j/2][1];
+                                day.lessons.add(lesson);
+                            }
+                            teachers1.get(position).week.add(day);
+                        }
+                        System.out.println(jsonObject.toString());
+                        TeacherFragment fragment = new TeacherFragment(teachers.get(position));
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.frame, fragment).commit();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }).start();
             }catch (Exception e){}
         });

@@ -10,6 +10,7 @@ class Teacher {
     String patronomic;
     String school;
     String subject;
+    ArrayList<Day> week = new ArrayList<>();
     Teacher(){
         id = -1;
         name = "";
@@ -37,6 +38,7 @@ class Lesson{
     String name;
     int numberinday;
     String start, end;
+    String classroom;
     Lesson(){
         id = -1;
         name = "";

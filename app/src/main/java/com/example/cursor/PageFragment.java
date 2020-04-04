@@ -1,5 +1,6 @@
 package com.example.cursor;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -28,8 +29,13 @@ public class PageFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_page, container, false);
         tableLayout = v.findViewById(R.id.table);
-        tableLayout.setShrinkAllColumns(true);
-        tableLayout.setStretchAllColumns(true);
+
+        tableLayout.setColumnStretchable(1, true);
+        tableLayout.setColumnShrinkable(1, true);
+        tableLayout.setColumnStretchable(2, true);
+        tableLayout.setColumnShrinkable(2, true);
+        tableLayout.setColumnStretchable(3, true);
+        tableLayout.setColumnShrinkable(3, true);
         tableLayout.setWeightSum(1);
         tableLayout.setPadding(20,0,20,0);
         DrawTable();
@@ -54,6 +60,9 @@ public class PageFragment extends Fragment {
             tv12.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT));
 
+            TextView tv0 = new TextView(getContext());
+            tv0.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT));
 
             TextView tv3 = new TextView(getContext());
             tv3.setLayoutParams(new TableRow.LayoutParams(
@@ -63,27 +72,41 @@ public class PageFragment extends Fragment {
             linearLayout.setOrientation(LinearLayout.VERTICAL);
             linearLayout.addView(tv11);
             linearLayout.addView(tv12);
-
+            tv0.setGravity(Gravity.CENTER_VERTICAL);
             tv2.setGravity(Gravity.CENTER);
             tv11.setGravity(Gravity.CENTER);
             tv12.setGravity(Gravity.CENTER);
             tv3.setGravity(Gravity.CENTER);
+            tv2.setTextColor(Color.BLACK);
+            tv11.setTextColor(Color.BLACK);
+            tv12.setTextColor(Color.BLACK);
+            tv3.setTextColor(Color.BLACK);
             tv2.setPadding(10,10,10,10);
+            tv0.setPadding(15,0,15,0);
             tv3.setPadding(10,10,10,10);
             linearLayout.setPadding(10,10,10,10);
+            tv2.setTextSize(15);
+            tv3.setTextSize(15);
+            tv0.setTextSize(15);
+            tv12.setTextSize(15);
+            tv11.setTextSize(15);
             tv11.setText(lessons.get(i).start);
             tv12.setText(lessons.get(i).end);
-            tv2.setText("201");
-            tv3.setText("там где надо");
+            tv2.setText(lessons.get(i).name);
+            tv3.setText(lessons.get(i).classroom);
+            tv0.setText(String.valueOf(i+1));
             tv2.setMaxLines(1);
             if (i - lessons.size() + 1 == 0) {
+                tv0.setBackground(getResources().getDrawable(R.drawable.cell_phone2));
                 linearLayout.setBackground(getResources().getDrawable(R.drawable.cell_phone2));
                 tv2.setBackground(getResources().getDrawable(R.drawable.cell_phone2));
             } else {
+                tv0.setBackground(getResources().getDrawable(R.drawable.cell_phone));
                 linearLayout.setBackground(getResources().getDrawable(R.drawable.cell_phone));
                 tv2.setBackground(getResources().getDrawable(R.drawable.cell_phone));
                 tv3.setBackground(getResources().getDrawable(R.drawable.cell_phone3));
             }
+            tbrow.addView(tv0);
             tbrow.addView(linearLayout);
             tbrow.addView(tv2);
             tbrow.addView(tv3);
