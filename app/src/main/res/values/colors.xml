@@ -3,5 +3,5 @@
     <color name="colorPrimary">#FFAD00</color>
     <color name="colorPrimaryDark">#FF6F22</color>
     <color name="colorAccent">#FF6F22</color>
-    <color name="go">#FAFAFA</color>
+    <color name="bordercolor">#FF6F22</color>
 </resources>

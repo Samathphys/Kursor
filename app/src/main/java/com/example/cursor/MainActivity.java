@@ -1,6 +1,9 @@
 package com.example.cursor;
 
+import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Display;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -22,6 +25,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
@@ -30,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     ArrayList<Teacher> teachers = new ArrayList<>();
     User user = new User();
-
+    int width;  // deprecated
+    int height;
     ListFragment listFragment;
     UserFragment userFragment = new UserFragment();
     ScheduleFragment scheduleFragment = new ScheduleFragment();
@@ -47,6 +53,14 @@ public class MainActivity extends AppCompatActivity {
         mDrawer.setDrawerListener(toggle);
         setupDrawerContent(nvDrawer);
         toggle.syncState();
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        width = size.x;
+        height = size.y;
+
+        log(width + " " +  height);
         final JSONArray[] jsonArrays = {null};
         new Thread(() -> {
             try {
@@ -66,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                sort();
                 listFragment = new ListFragment(teachers);
                 userFragment.user = user;
                 loadFragment(listFragment);
@@ -75,6 +90,24 @@ public class MainActivity extends AppCompatActivity {
         }).start();
 
     }
+
+    void sort(){
+        ArrayList<Teacher> teachers1 = new ArrayList<>();
+        String[] s = new String[teachers.size()];
+        for (int i = 0; i < s.length; i++) {
+            s[i] = teachers.get(i).name;
+        }
+        ArrayList<String> ar = new ArrayList<>();
+        for (int i = 0; i < s.length; i++) {
+            ar.add(s[i]);
+        }
+        Arrays.sort(s);
+        for (int i = 0; i < s.length; i++) {
+            teachers1.add(teachers.get(ar.indexOf(s[i])));
+        }
+        teachers = teachers1;
+    }
+
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 menuItem -> {
@@ -128,9 +161,9 @@ public class MainActivity extends AppCompatActivity {
     }
     public void selectDrawerItem(MenuItem menuItem) {
         switch(menuItem.getItemId()) {
-            case R.id.profile:
-                loadFragment(userFragment);
-                break;
+//            case R.id.profile:
+//                loadFragment(userFragment);
+//                break;
             case R.id.teacher_list:
                 loadFragment(listFragment);
                 break;
@@ -143,10 +176,20 @@ public class MainActivity extends AppCompatActivity {
         mDrawer.closeDrawers();
     }
     void loadFragment(Fragment fragment){
-
+        printStack();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+        printStack();
+    }
+    public void printStack() {
+        log("fragments on MainActivity: " + getSupportFragmentManager().getFragments().size());
+        List<Fragment> a = getSupportFragmentManager().getFragments();
+        for (int i = 0; i < a.size(); i++) {
+            log(a.get(i).toString());
+        }
+    }
+    static <T> void log(T msg) { Log.v("log", msg.toString());
     }
 }

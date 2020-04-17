@@ -1,5 +1,7 @@
 package com.example.cursor;
 
+import android.graphics.Bitmap;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -10,6 +12,8 @@ class Teacher {
     String patronomic;
     String school;
     String subject;
+    String url;
+    Bitmap bitmap;
     ArrayList<Day> week = new ArrayList<>();
     Teacher(){
         id = -1;
@@ -18,6 +22,7 @@ class Teacher {
         patronomic = "";
         school = "";
         subject = "";
+        url = "";
     }
     String getfullname(){
         return name + " " + patronomic + " " + surname;

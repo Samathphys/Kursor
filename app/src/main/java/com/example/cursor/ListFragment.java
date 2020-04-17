@@ -1,6 +1,8 @@
 package com.example.cursor;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -8,14 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import static com.example.cursor.MainActivity.download_arr;
@@ -65,6 +72,7 @@ public class ListFragment extends Fragment {
             try {
                 new Thread(() -> {
                     try {
+                        load(position, false);
                         JSONArray jsonArray1 = download_arr("http://cursor.spb.ru/get_time").getJSONArray(0);
                         String [][] time = new String[10][2];
                         time[8][0] = "--";
@@ -84,6 +92,7 @@ public class ListFragment extends Fragment {
                             }
                         System.out.println(jsonArray1);
                         JSONObject jsonObject = download_obj("http://cursor.spb.ru/schedule/" + teachers1.get(position).id);
+                        Bitmap bitmap = DownloadImageFromPath( jsonObject.getString("photo"));
                         for (int i = 0; i < 5; i++) {
                             Day day = new Day();
                             JSONArray jsonArray = jsonObject.getJSONArray(week[i]);
@@ -98,17 +107,17 @@ public class ListFragment extends Fragment {
                             }
                             teachers1.get(position).week.add(day);
                         }
+                        teachers1.get(position).url = jsonObject.getString("photo");
+                        teachers1.get(position).bitmap = bitmap;
+                        System.out.println(teachers1.get(position).url);
                         System.out.println(jsonObject.toString());
-                        TeacherFragment fragment = new TeacherFragment(teachers.get(position));
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.frame, fragment).commit();
+                        load(position, true);
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                 }).start();
             }catch (Exception e){}
         });
-
         editText.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -131,6 +140,17 @@ public class ListFragment extends Fragment {
 
         return v;
     }
+
+    void load(int position, boolean ready){
+        TeacherFragment fragment = new TeacherFragment(teachers1.get(position), ready);
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frame, fragment);
+        fragmentTransaction.addToBackStack(null);
+        if(ready)
+            getFragmentManager().popBackStack();
+
+        fragmentTransaction.commit();
+    }
     public void searchItem(String textToSearch){
         listItems = new ArrayList<>(strings);
         listItems1 = new ArrayList<>(strings1);
@@ -142,6 +162,9 @@ public class ListFragment extends Fragment {
                 teachers1.remove(listItems.indexOf(item));
                 listItems.remove(item);
             }
+        }
+        for (int i = 0; i < teachers1.size(); i++) {
+            System.out.println(teachers1.get(i).name);
         }
         adapter.notifyDataSetChanged();
         adapter = new TAdapter((Activity) v.getContext(), listItems, listItems1);
@@ -156,6 +179,32 @@ public class ListFragment extends Fragment {
         teachers1 = new ArrayList<>(teachers);
         adapter = new TAdapter((Activity) v.getContext(), listItems, listItems1);
         listView.setAdapter(adapter);
+    }
+    Bitmap DownloadImageFromPath(String path){
+        InputStream in =null;
+        Bitmap bmp=null;
+        int responseCode = -1;
+        try{
+
+            URL url = new URL(path);
+            HttpURLConnection con = (HttpURLConnection)url.openConnection();
+            con.setDoInput(true);
+            con.connect();
+            responseCode = con.getResponseCode();
+            if(responseCode == HttpURLConnection.HTTP_OK)
+            {
+                //download
+                in = con.getInputStream();
+                bmp = BitmapFactory.decodeStream(in);
+                in.close();
+
+            }
+
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return bmp;
     }
 
 

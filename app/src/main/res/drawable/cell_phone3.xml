@@ -2,15 +2,15 @@
     <item>
         <shape android:shape="rectangle">
             <stroke
-                android:width="2dp"
-                android:color="#979797" />
+                android:width="3dp"
+                android:color="@color/bordercolor" />
         </shape>
     </item>
 
-    <item android:bottom="2dp">
+    <item android:bottom="3dp">
         <shape android:shape="rectangle">
             <stroke
-                android:width="2dp"
+                android:width="3dp"
                 android:color="#FAFAFA" />
             <solid android:color="#00000000" />
         </shape>
