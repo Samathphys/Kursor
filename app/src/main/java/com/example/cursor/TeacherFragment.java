@@ -103,12 +103,13 @@ public class TeacherFragment extends Fragment {
             imageView.setPadding(30, 30 , 0, 0);
             layoutmain = v.findViewById(R.id.linear);
             imageView.setImageBitmap(teacher.bitmap);
-
-            setTextSett(name, teacher.getfullname(), (int) 25);
+            setTextSett(name, teacher.getfullname(), (int) 20);
             name.setTextColor(Color.BLACK);
+            name.setPadding(50, 50, 50, 0);
+            school.setPadding(50, 5, 50, 0);
             school.setTextColor(Color.GRAY);
-            setTextSett(school, teacher.school, (int) 20);
-            setTextSett(status, teacher.subject, 20);
+            setTextSett(school, teacher.subject, (int) 15);
+            setTextSett(status, "", 20);
             pager = v.findViewById(R.id.pager);
             pagerAdapter = new MyFragmentPagerAdapter(getFragmentManager());
             pager.setAdapter(pagerAdapter);
@@ -140,8 +141,8 @@ public class TeacherFragment extends Fragment {
         v.setText(s);
         v.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        v.setPadding(50, 50, 50, 0);
-        v.setTextSize(20);
+
+        v.setTextSize(fontsize);
         v.setGravity(Gravity.CENTER);
     }
 

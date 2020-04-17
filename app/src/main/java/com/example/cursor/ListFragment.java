@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -38,6 +40,7 @@ public class ListFragment extends Fragment {
     ArrayList<String> strings;
     ArrayList<String> strings1;
     ListView listView;
+    ImageButton imageButton;
     ArrayList<String> listItems;
     ArrayList<String> listItems1;
     String []week = {"monday","tuesday","wednesday", "thursday", "friday"};
@@ -63,6 +66,11 @@ public class ListFragment extends Fragment {
 
         editText = v.findViewById(R.id.txtsearch);
         listView = v.findViewById(R.id.listview);
+        imageButton = v.findViewById(R.id.imageButton);
+        imageButton.setOnClickListener(view -> {
+            editText.setText("");
+            initList();
+        });
 
         adapter = new TAdapter((Activity) v.getContext(), strings, strings1);
         listView.setAdapter(adapter);
@@ -87,7 +95,9 @@ public class ListFragment extends Fragment {
                                 int b = s.indexOf("-");
                                 int c = s.indexOf(")");
                                 time[i/2][0] = s.substring(a+1,b);
+                                time[i/2][0].replace('.', ':');
                                 time[i/2][1] = s.substring(b+1,c);
+                                time[i/2][1].replace('.', ':');
                                 System.out.println(time[i/2][0] + ":" + time[i/2][1]);
                             }
                         System.out.println(jsonArray1);
